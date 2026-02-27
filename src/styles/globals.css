@@ -1,0 +1,177 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #0b0b0b;
+  --foreground: #f5f5f5;
+  --card: #111111;
+  --card-foreground: #f5f5f5;
+  --popover: #111111;
+  --popover-foreground: #f5f5f5;
+
+  --primary: #0b0b0b;
+  --primary-foreground: #f5f5f5;
+
+  --secondary: #0f0f0f;
+  --secondary-foreground: #f5f5f5;
+
+  --muted: #121212;
+  --muted-foreground: #a3a3a3;
+
+  --accent: #f5c542;
+  --accent-foreground: #0b0b0b;
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: #0b0b0b;
+
+  --border: #262626;
+  --input: #262626;
+  --ring: #f5c542;
+
+  --gold: #f5c542;
+  --gold-light: #ffd66b;
+  --gold-dark: #c89b24;
+
+  --deep-blue: #0b0b0b;
+  --deep-blue-light: #111111;
+  --cream: #0f0f0f;
+
+  --radius: 0.75rem;
+
+  --sidebar: #0b0b0b;
+  --sidebar-foreground: #f5f5f5;
+  --sidebar-primary: #f5f5f5;
+  --sidebar-primary-foreground: #0b0b0b;
+  --sidebar-accent: #111111;
+  --sidebar-accent-foreground: #f5f5f5;
+  --sidebar-border: #262626;
+  --sidebar-ring: #f5c542;
+}
+
+
+@theme inline {
+  --font-sans: 'Cormorant Garamond', 'Georgia', serif;
+  --font-mono: 'Inter', 'Geist', sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-deep-blue: var(--deep-blue);
+  --color-deep-blue-light: var(--deep-blue-light);
+  --color-cream: var(--cream);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+  @apply bg-background text-foreground;
+  background-image:
+    linear-gradient(to right, rgba(245,197,66,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245,197,66,0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center;
+}
+
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.animate-slide-out-right {
+  animation: slideOutRight 0.3s ease-out forwards;
+}
+
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-500 { animation-delay: 0.5s; }
+.animation-delay-600 { animation-delay: 0.6s; }
