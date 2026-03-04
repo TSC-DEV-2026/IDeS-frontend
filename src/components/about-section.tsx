@@ -19,7 +19,7 @@ export function AboutSection() {
     <section
       id="sobre"
       ref={ref}
-      className="py-24 md:py-32"
+      className="py-16 md:py-20"
     >
       <div className="mx-auto max-w-7xl px-6">
         {/* Section label */}

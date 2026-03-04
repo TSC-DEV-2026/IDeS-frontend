@@ -1,6 +1,8 @@
 // src/pages/Home.tsx
 import { ArrowRight, Calendar, ShoppingBag, Ticket, Users } from "lucide-react";
+import { getEventoInfo, listEventos, toNumber, type Evento } from "@/services/event";
 import { Link } from "react-router-dom";
+import { env } from "process";
 
 function Section({
   title,
@@ -70,9 +72,18 @@ function Card({
   );
 }
 
+
+const eventos = await listEventos();
+
+let evento_name = eventos.length ? eventos[0].nome_evento : "Evento";
+let data = eventos.length ? eventos[0].dt_ini.split("-")[0] : "Evento";
+
+
+
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-64px)]">
+      
       {/* HERO */}
       <section className="relative overflow-hidden pt-16 md:pt-20">
         <div className="absolute inset-0">
@@ -86,12 +97,12 @@ export default function Home() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75">
               <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
-              Congresso 2026 • Experiência imersiva
+              Congresso {data} • Experiência imersiva
             </div>
 
             <h1 className="mt-5 text-4xl md:text-5xl font-semibold tracking-tight text-white">
-              Identidade &amp; Santidade
-              <span className="text-[#d4af37]"> 2026</span>
+              {evento_name}
+              <span className="text-[#d4af37]"></span>
             </h1>
 
             <p className="mt-4 text-base md:text-lg text-white/70 leading-relaxed">
@@ -150,7 +161,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
             <p className="text-white/70 leading-relaxed">
-              O <span className="text-white font-semibold">Identidade &amp; Santidade</span>{" "}
+                O <span className="text-white font-semibold">{evento_name}</span>{" "}
               é um congresso com foco em transformação prática: entender quem você é em
               Deus, alinhar escolhas e viver com constância. Tudo com linguagem clara,
               estrutura bem definida e espaço para reflexão.
@@ -260,7 +271,7 @@ export default function Home() {
       {/* CTA FINAL */}
       <section className="py-14 md:py-20">
         <div className="mx-auto w-full max-w-6xl px-4">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/6 to-black/60 p-8 md:p-10">
+          <div className="rounded-3xl border border-white/10 bg-linear-to-b from-white/6 to-black/60 p-8 md:p-10">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
                 <div className="text-sm text-white/70">

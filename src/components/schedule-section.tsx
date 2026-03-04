@@ -51,13 +51,13 @@ export function ScheduleSection() {
   }, [])
 
   return (
-    <section id="programacao" ref={ref} className="py-24 md:py-32">
+    <section id="programacao" ref={ref} className="py-16 md:py-20">
       <div className="mx-auto max-w-4xl px-6">
         <p className="mb-4 text-center font-mono text-sm font-semibold tracking-[0.3em] text-gold uppercase">
           Programacao
         </p>
         <h2 className="mb-16 text-center font-sans text-4xl font-bold text-foreground md:text-5xl text-balance">
-          Tres dias de <span className="text-gold">transformacao</span>
+          Tres dias de <span className="text-gold">transformação</span>
         </h2>
 
         {/* Day tabs */}

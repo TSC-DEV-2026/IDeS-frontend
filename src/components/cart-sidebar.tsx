@@ -35,7 +35,7 @@ export function CartSidebar({ open, onClose, items, onRemove }: CartSidebarProps
           </h3>
           <button
             onClick={onClose}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer"
             aria-label="Fechar carrinho"
           >
             <X className="h-5 w-5" />

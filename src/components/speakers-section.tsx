@@ -49,7 +49,7 @@ export function SpeakersSection() {
   }, [])
 
   return (
-    <section id="preletores" ref={ref} className="bg-secondary py-24 md:py-32">
+    <section id="preletores" ref={ref} className="bg-secondary py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-6">
         <p className="mb-4 text-center font-mono text-sm font-semibold tracking-[0.3em] text-gold uppercase">
           Preletores

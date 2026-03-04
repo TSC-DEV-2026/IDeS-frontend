@@ -51,7 +51,7 @@ export function FaqSection() {
   }, [])
 
   return (
-    <section id="faq" ref={ref} className="bg-secondary py-24 md:py-32">
+    <section id="faq" ref={ref} className="bg-secondary py-16 md:py-20">
       <div className="mx-auto max-w-3xl px-6">
         <p className="mb-4 text-center font-mono text-sm font-semibold tracking-[0.3em] text-gold uppercase">
           Perguntas Frequentes

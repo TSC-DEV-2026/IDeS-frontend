@@ -1,143 +1,159 @@
-import { useEffect, useRef, useState } from "react"
-import { X, CheckCircle2 } from "lucide-react"
-import type { CartItem } from "@/types/cart"
+import { useEffect, useMemo, useRef, useState } from "react";
+import { X, CheckCircle2, Loader2 } from "lucide-react";
+import type { CartItem } from "@/types/cart";
 
-const tickets = [
-  {
-    name: "Lote 1",
-    price: "R$ 149,90",
-    tag: "Promocional",
-    benefits: ["Acesso a todas as palestras", "Material de apoio digital", "Certificado de participacao"],
-  },
-  {
-    name: "Lote 2",
-    price: "R$ 199,90",
-    tag: "",
-    benefits: ["Acesso a todas as palestras", "Material de apoio digital", "Certificado de participacao", "Kit do congresso"],
-  },
-  {
-    name: "VIP",
-    price: "R$ 399,90",
-    tag: "Mais vendido",
-    benefits: [
-      "Acesso a todas as palestras",
-      "Material de apoio digital",
-      "Certificado de participacao",
-      "Kit do congresso premium",
-      "Assentos reservados",
-      "Area VIP exclusiva",
-      "Meet & Greet com preletores",
-    ],
-  },
-  {
-    name: "Combo Grupo",
-    price: "R$ 119,90",
-    tag: "Por pessoa (min. 5)",
-    benefits: ["Acesso a todas as palestras", "Material de apoio digital", "Certificado de participacao", "Desconto exclusivo para grupos"],
-  },
-]
+export type TicketVM = {
+  id: number | string;
+  name: string;
+  price: number;
+  tag?: string;
+  benefits?: string[];
+  vagas?: number;
+};
 
+type EventoVM = {
+  nome_evento: string;
+  local: string;
+  dt_ini: string;
+  dt_fim: string;
+  hr_ini: string;
+  hr_fim: string;
+};
 
-function parseBRL(v: string): number {
-  // "R$ 149,90" -> 149.90
-  const cleaned = v.replace(/[^0-9,]/g, "").replace(",", ".");
-  const n = Number(cleaned);
-  return Number.isFinite(n) ? n : 0;
+function formatBRL(v: number): string {
+  try {
+    return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
+  } catch {
+    return `R$ ${v.toFixed(2)}`.replace(".", ",");
+  }
 }
-type Props = { onCheckoutAdd?: (item: CartItem) => void }
 
-export function TicketsSection({ onCheckoutAdd }: Props) {
-  const ref = useRef<HTMLElement>(null)
-  const [visible, setVisible] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedTicket, setSelectedTicket] = useState<(typeof tickets)[0] | null>(null)
-  const [checkoutDone, setCheckoutDone] = useState(false)
+type Props = {
+  onCheckoutAdd?: (item: CartItem) => void;
+  loading?: boolean;
+  evento?: EventoVM | null;
+  tickets?: TicketVM[];
+};
+
+export function TicketsSection({ onCheckoutAdd, loading, evento, tickets }: Props) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<TicketVM | null>(null);
+  const [checkoutDone, setCheckoutDone] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setVisible(true)
+        if (entry.isIntersecting) setVisible(true);
       },
       { threshold: 0.1 }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
 
-  function openModal(ticket: (typeof tickets)[0]) {
-    setSelectedTicket(ticket)
-    setCheckoutDone(false)
-    setModalOpen(true)
+const list = useMemo(() => (tickets ? tickets.slice() : []), [tickets]);
+
+  function openModal(ticket: TicketVM) {
+    setSelectedTicket(ticket);
+    setCheckoutDone(false);
+    setModalOpen(true);
   }
 
   function handleCheckout(e: React.FormEvent) {
-    e.preventDefault()
-    setCheckoutDone(true)
+    e.preventDefault();
+    setCheckoutDone(true);
     if (selectedTicket && onCheckoutAdd) {
-      onCheckoutAdd({ name: `Ingresso ${selectedTicket.name}`, price: parseBRL(selectedTicket.price) })
+      onCheckoutAdd({ name: `Ingresso ${selectedTicket.name}`, price: selectedTicket.price });
     }
   }
 
   return (
-    <section id="ingressos" ref={ref} className="bg-secondary py-24 md:py-32">
+    <section id="ingressos" ref={ref} className="bg-secondary py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-6">
         <p className="mb-4 text-center font-mono text-sm font-semibold tracking-[0.3em] text-gold uppercase">
           Ingressos
         </p>
-        <h2 className="mb-16 text-center font-sans text-4xl font-bold text-foreground md:text-5xl text-balance">
+        <h2 className="mb-6 text-center font-sans text-4xl font-bold text-foreground md:text-5xl text-balance">
           Garanta sua <span className="text-gold">vaga</span>
         </h2>
 
-        <div
-          className={`grid gap-8 transition-all duration-1000 sm:grid-cols-2 lg:grid-cols-4 ${
-            visible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
-        >
-          {tickets.map((ticket, i) => (
-            <div
-              key={ticket.name}
-              className={`relative flex flex-col rounded-sm border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-                ticket.name === "VIP"
-                  ? "border-gold shadow-lg shadow-gold/10"
-                  : "border-border hover:shadow-gold/5"
-              }`}
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              {ticket.tag && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-gold px-3 py-1 font-mono text-xs font-semibold text-deep-blue">
-                  {ticket.tag}
-                </span>
-              )}
+        {evento ? (
+          <p className="mb-12 text-center font-mono text-sm text-muted-foreground">
+            {evento.nome_evento} • {evento.local}
+          </p>
+        ) : (
+          <div className="mb-12" />
+        )}
 
-              <h3 className="mt-2 text-center font-sans text-2xl font-bold text-foreground">
-                {ticket.name}
-              </h3>
-              <p className="mt-2 text-center font-sans text-3xl font-bold text-gold">
-                {ticket.price}
-              </p>
-
-              <ul className="mt-6 flex-1 space-y-3">
-                {ticket.benefits.map((b) => (
-                  <li key={b} className="flex items-start gap-2 font-mono text-sm text-muted-foreground">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => openModal(ticket)}
-                className={`mt-8 w-full rounded-sm py-3 font-mono text-sm font-semibold transition-all ${
-                  ticket.name === "VIP"
-                    ? "bg-gold text-deep-blue hover:bg-gold-light hover:shadow-lg"
-                    : "border border-gold text-gold hover:bg-gold hover:text-deep-blue"
+        {loading ? (
+          <div className="flex items-center justify-center gap-3 py-16 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            <span className="font-mono text-sm">Carregando lotes...</span>
+          </div>
+        ) : (
+          <div
+            className={`grid gap-8 transition-all duration-1000 sm:grid-cols-2 lg:grid-cols-4 ${
+              visible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+            }`}
+          >
+            {list.map((ticket, i) => (
+              <div
+                key={String(ticket.id)}
+                className={`relative flex flex-col rounded-sm border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                  ticket.name.toUpperCase() === "VIP"
+                    ? "border-gold shadow-lg shadow-gold/10"
+                    : "border-border hover:shadow-gold/5"
                 }`}
+                style={{ animationDelay: `${i * 100}ms` }}
               >
-                Selecionar
-              </button>
-            </div>
-          ))}
-        </div>
+                {ticket.tag && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-gold px-3 py-1 font-mono text-xs font-semibold text-deep-blue">
+                    {ticket.tag}
+                  </span>
+                )}
+
+                <h3 className="mt-2 text-center font-sans text-2xl font-bold text-foreground">
+                  {ticket.name}
+                </h3>
+                <p className="mt-2 text-center font-sans text-3xl font-bold text-gold">
+                  {formatBRL(ticket.price)}
+                </p>
+
+                <ul className="mt-6 flex-1 space-y-3">
+                  {(ticket.benefits && ticket.benefits.length ? ticket.benefits : [
+                    "Acesso a todas as palestras",
+                    "Material de apoio digital",
+                    "Certificado de participacao",
+                  ]).map((b) => (
+                    <li key={b} className="flex items-start gap-2 font-mono text-sm text-muted-foreground">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                      {b}
+                    </li>
+                  ))}
+                  {typeof ticket.vagas === "number" && (
+                    <li className="flex items-start gap-2 font-mono text-sm text-muted-foreground">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                      Vagas: {ticket.vagas}
+                    </li>
+                  )}
+                </ul>
+
+                <button
+                  onClick={() => openModal(ticket)}
+                  className={`mt-8 w-full rounded-sm py-3 font-mono text-sm font-semibold transition-all ${
+                    ticket.name.toUpperCase() === "VIP"
+                      ? "bg-gold text-deep-blue hover:bg-gold-light hover:shadow-lg"
+                      : "border border-gold text-gold hover:bg-gold hover:text-deep-blue hover:cursor-pointer"
+                  }`}
+                >
+                  Selecionar
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Checkout Modal */}
@@ -164,7 +180,7 @@ export function TicketsSection({ onCheckoutAdd }: Props) {
                   Simulacao de Checkout
                 </h3>
                 <p className="mt-2 font-mono text-sm text-muted-foreground">
-                  {selectedTicket?.name} — {selectedTicket?.price}
+                  {selectedTicket?.name} — {selectedTicket ? formatBRL(selectedTicket.price) : ""}
                 </p>
 
                 <form onSubmit={handleCheckout} className="mt-6 flex flex-col gap-4">
@@ -205,11 +221,11 @@ export function TicketsSection({ onCheckoutAdd }: Props) {
                   Compra realizada com sucesso!
                 </h3>
                 <p className="mt-2 font-mono text-sm text-muted-foreground">
-                  (simulacao visual)
+                  (Simulacao) Seu ingresso foi adicionado ao carrinho.
                 </p>
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="mt-6 rounded-sm bg-gold px-6 py-3 font-mono text-sm font-semibold text-deep-blue transition-all hover:bg-gold-light"
+                  className="mt-6 rounded-sm border border-gold px-6 py-2 font-mono text-sm font-semibold text-gold hover:bg-gold hover:text-deep-blue"
                 >
                   Fechar
                 </button>
@@ -219,5 +235,5 @@ export function TicketsSection({ onCheckoutAdd }: Props) {
         </div>
       )}
     </section>
-  )
+  );
 }
