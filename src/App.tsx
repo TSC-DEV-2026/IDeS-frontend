@@ -6,16 +6,16 @@ import { SiteFooter } from "@/components/site-footer";
 import { CartSidebar } from "@/components/cart-sidebar";
 import { FloatingCTA } from "@/components/floating-cta";
 
-import HomePage from "@/pages/HomePage";
-import SobrePage from "@/pages/SobrePage";
-import PreletoresPage from "@/pages/PreletoresPage";
-import ProgramacaoPage from "@/pages/ProgramacaoPage";
-import IngressosPage from "@/pages/IngressosPage";
-import LojaPage from "@/pages/LojaPage";
-import FaqPage from "@/pages/FaqPage";
-import NotFoundPage from "@/pages/NotFoundPage";
-import LoginPage from "@/pages/LoginPage";
-import RegisterPage from "@/pages/RegisterPage";
+import InicioPage from "@/pages/inicio";
+import SobrePage from "@/pages/sobre";
+import PreletoresPage from "@/pages/preletores";
+import ProgramacaoPage from "@/pages/programacao";
+import IngressosPage from "@/pages/ingressos";
+import LojaPage from "@/pages/loja";
+import FaqPage from "@/pages/faq";
+import NotFoundPage from "@/pages/nao-encontrado";
+import LoginPage from "@/pages/autenticacao/login";
+import RegisterPage from "@/pages/autenticacao/cadastro";
 
 import type { CartItem } from "@/types/cart";
 
@@ -47,10 +47,9 @@ export default function App() {
         />
       )}
 
-      {/* FIX: espaço no mobile para não ficar atrás do dock/footer */}
-      <main className={isAuthRoute ? "" : " lg:pb-0"}>
+      <main className={isAuthRoute ? "" : "lg:pb-0"}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<InicioPage />} />
           <Route path="/sobre" element={<SobrePage />} />
 
           <Route path="/login" element={<LoginPage />} />
