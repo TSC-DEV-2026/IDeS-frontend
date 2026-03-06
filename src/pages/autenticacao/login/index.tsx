@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../utils/axiosInstance";
+import api from "@/utils/axiosInstance";
 import { Eye, EyeOff } from "lucide-react";
+import { fetchMe } from "@/lib/session";
 
 export default function LoginPage() {
   const nav = useNavigate();
 
   const [usuario, setUsuario] = useState(""); // cpf OU email
   const [senha, setSenha] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // NOVO
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -31,7 +32,10 @@ export default function LoginPage() {
         senha: s,
       });
 
-      nav("/", { replace: true });
+      const me = await fetchMe();
+      const isAdmin = Boolean(me?.pessoa?.adm);
+
+      nav(isAdmin ? "/admin" : "/", { replace: true });
     } catch (e: any) {
       const msg =
         e?.response?.data?.detail ||
@@ -90,12 +94,11 @@ export default function LoginPage() {
             <div>
               <label className="block text-sm text-white/80">Senha</label>
 
-              {/* NOVO: wrapper + botão do olhinho */}
               <div className="relative">
                 <input
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
-                  type={showPassword ? "text" : "password"} // NOVO
+                  type={showPassword ? "text" : "password"}
                   className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 pr-12 text-sm text-white outline-none
                              focus:border-[#d4af37] focus:shadow-[0_0_10px_3px_rgba(212,175,55,0.7)]
                              transition-shadow duration-300 hover:cursor-pointer"
@@ -111,7 +114,11 @@ export default function LoginPage() {
                   aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
                   title={showPassword ? "Ocultar senha" : "Mostrar senha"}
                 >
-                  {showPassword ? <EyeOff className="mt-2" size={20} /> : <Eye className="mt-2" size={20} />}
+                  {showPassword ? (
+                    <EyeOff className="mt-2" size={20} />
+                  ) : (
+                    <Eye className="mt-2" size={20} />
+                  )}
                 </button>
               </div>
             </div>

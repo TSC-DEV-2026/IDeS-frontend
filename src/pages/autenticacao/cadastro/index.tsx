@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../utils/axiosInstance";
+import api from "@/utils/axiosInstance";
 
 function onlyDigits(s: string) {
   return (s || "").replace(/\D+/g, "");
